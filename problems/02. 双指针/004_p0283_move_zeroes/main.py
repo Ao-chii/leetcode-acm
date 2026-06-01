@@ -1,14 +1,13 @@
 import sys
 
-
-def solve(data: str) -> str:
-    return ""
-
-
 def main() -> None:
-    data = sys.stdin.read()
-    sys.stdout.write(solve(data))
-
+    nums = list(map(int, input().split()))
+    left = 0
+    for i in range(len(nums)):
+        if nums[i]:
+            nums[left], nums[i] = nums[i], nums[left]
+            left += 1
+    print(nums)
 
 if __name__ == "__main__":
     main()

@@ -11,6 +11,7 @@ def main() -> None:
                 length += 1
             ans = max(ans, length)
         continue
+    print(ans)
 
 if __name__ == "__main__":
     main()
