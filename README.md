@@ -12,8 +12,6 @@ problems/
     main.py
     examples.txt
     statement.md
-    leetcode.py
-    examples.raw.txt
 scripts/
   import_hot100.py
   fetch_leetcode.py
@@ -70,7 +68,7 @@ Create the Hot 100 skeleton:
 python scripts/import_hot100.py
 ```
 
-Fetch statement, raw LeetCode examples, and the Python `Solution` template:
+Fetch the official Chinese statement:
 
 ```powershell
 python scripts/fetch_leetcode.py two-sum
@@ -78,6 +76,12 @@ python scripts/fetch_leetcode.py --all
 ```
 
 The fetch script does not convert LeetCode examples into ACM examples. LeetCode has function-call examples, not a real stdin contract. Write `examples.txt` yourself so the local format stays honest.
+
+If you want to keep raw LeetCode examples and the Python `Solution` template for reference, add:
+
+```powershell
+python scripts/fetch_leetcode.py two-sum --keep-raw
+```
 
 ## Main File Contract
 

@@ -21,10 +21,13 @@ QUERY = """
 query questionData($titleSlug: String!) {
   question(titleSlug: $titleSlug) {
     questionId
+    questionFrontendId
     title
+    translatedTitle
     titleSlug
     difficulty
     content
+    translatedContent
     exampleTestcases
     codeSnippets {
       lang
@@ -113,32 +116,32 @@ def fetch_question(slug: str, site: str) -> dict:
     return question
 
 
-def save_question(question: dict, fallback_problem: dict | None) -> Path:
-    question_id = int(question["questionId"])
+def save_question(question: dict, fallback_problem: dict | None, keep_raw: bool) -> Path:
+    fallback_id = fallback_problem["id"] if fallback_problem else None
+    question_id = int(question.get("questionFrontendId") or fallback_id or question["questionId"])
     slug = question["titleSlug"]
-    title = question["title"]
+    title = question.get("translatedTitle") or question["title"]
     target_dir = problem_dir(question_id, slug)
     target_dir.mkdir(parents=True, exist_ok=True)
 
+    content = question.get("translatedContent") or question.get("content") or ""
     statement = (
         f"# {question_id}. {title}\n\n"
         f"Difficulty: `{question.get('difficulty', '')}`\n\n"
         f"Slug: `{slug}`\n\n"
-        f"{html_to_markdown(question.get('content') or '')}"
+        f"{html_to_markdown(content)}"
     )
     (target_dir / "statement.md").write_text(statement, encoding="utf-8")
-    (target_dir / "examples.raw.txt").write_text(question.get("exampleTestcases") or "", encoding="utf-8")
 
-    snippet = pick_python_snippet(question)
-    if snippet:
-        (target_dir / "leetcode.py").write_text(snippet + "\n", encoding="utf-8")
+    if keep_raw:
+        (target_dir / "examples.raw.txt").write_text(question.get("exampleTestcases") or "", encoding="utf-8")
+        snippet = pick_python_snippet(question)
+        if snippet:
+            (target_dir / "leetcode.py").write_text(snippet + "\n", encoding="utf-8")
 
     examples_path = target_dir / "examples.txt"
     if not examples_path.exists():
         examples_path.write_text("Example 1:\nInput:\n\nOutput:\n", encoding="utf-8")
-
-    if fallback_problem and fallback_problem["id"] != question_id:
-        print(f"[WARN] id changed: {fallback_problem['id']} -> {question_id}")
 
     return target_dir
 
@@ -157,6 +160,7 @@ def main() -> None:
     parser.add_argument("slug", nargs="*")
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--site", choices=sorted(ENDPOINTS), default="cn")
+    parser.add_argument("--keep-raw", action="store_true")
     args = parser.parse_args()
 
     known = hot100_by_slug()
@@ -165,7 +169,7 @@ def main() -> None:
     for slug in slugs_from_args(args):
         try:
             question = fetch_question(slug, args.site)
-            target_dir = save_question(question, known.get(slug))
+            target_dir = save_question(question, known.get(slug), args.keep_raw)
             print(f"[OK] {slug} -> {target_dir.relative_to(ROOT)}")
             ok += 1
         except (urllib.error.URLError, TimeoutError, RuntimeError, OSError) as exc:
