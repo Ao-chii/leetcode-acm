@@ -1,4 +1,7 @@
-# leetcode-hot100
+<h1>
+  <img src="assets/leetcode-acm-icon.svg" alt="leetcode-acm icon" width="42" align="left">
+  leetcode-hot100
+</h1>
 
 ACM mode practice workspace for LeetCode Hot 100.
 
