@@ -28,13 +28,6 @@ if __name__ == "__main__":
 '''
 
 
-EXAMPLES_TEMPLATE = """Example 1:
-Input:
-
-Output:
-"""
-
-
 def slugify(value: str) -> str:
     value = value.strip().lower()
     value = re.sub(r"[^a-z0-9]+", "_", value)
@@ -52,7 +45,6 @@ def create_problem(number: int, title: str) -> Path:
 
     problem_dir.mkdir(parents=True)
     (problem_dir / "main.py").write_text(MAIN_TEMPLATE, encoding="utf-8")
-    (problem_dir / "examples.txt").write_text(EXAMPLES_TEMPLATE, encoding="utf-8")
     return problem_dir
 
 

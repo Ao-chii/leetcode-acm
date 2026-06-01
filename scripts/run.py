@@ -5,9 +5,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from study_plan import PROBLEMS_DIR, find_problem_dir, runnable_problem_dirs
 
 ROOT = Path(__file__).resolve().parents[1]
-PROBLEMS_DIR = ROOT / "problems"
 
 
 @dataclass(frozen=True)
@@ -23,19 +23,15 @@ def normalize_output(text: str) -> str:
 
 def existing_problem_dirs(problem_name: str | None) -> list[Path]:
     if problem_name:
-        problem_dir = PROBLEMS_DIR / problem_name
-        if not problem_dir.is_dir():
+        problem_dir = find_problem_dir(problem_name)
+        if problem_dir is None:
             raise SystemExit(f"problem not found: {problem_name}")
         return [problem_dir]
 
     if not PROBLEMS_DIR.is_dir():
         return []
 
-    return sorted(
-        path
-        for path in PROBLEMS_DIR.iterdir()
-        if path.is_dir() and (path / "main.py").is_file()
-    )
+    return runnable_problem_dirs()
 
 
 def parse_examples(path: Path) -> list[Example]:
@@ -117,10 +113,11 @@ def run_example(problem_dir: Path, example: Example, timeout: float) -> bool:
     return True
 
 
-def run_problem(problem_dir: Path, timeout: float) -> tuple[int, int]:
+def run_problem(problem_dir: Path, timeout: float, show_skip: bool) -> tuple[int, int]:
     examples = parse_examples(problem_dir / "examples.txt")
     if not examples:
-        print(f"[SKIP] {problem_dir.name}: no examples")
+        if show_skip:
+            print(f"[SKIP] {problem_dir.name}: no examples")
         return 0, 0
 
     passed = 0
@@ -139,12 +136,14 @@ def main() -> None:
     total_passed = 0
     total_examples = 0
     for problem_dir in existing_problem_dirs(args.problem):
-        passed, examples = run_problem(problem_dir, args.timeout)
+        passed, examples = run_problem(problem_dir, args.timeout, args.problem is not None)
         total_passed += passed
         total_examples += examples
 
     if total_examples == 0:
-        raise SystemExit("no examples found")
+        if args.problem is None:
+            print("no local examples found")
+        return
 
     print(f"{total_passed}/{total_examples} passed")
     if total_passed != total_examples:

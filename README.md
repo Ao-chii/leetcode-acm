@@ -7,15 +7,21 @@ ACM mode practice workspace for LeetCode Hot 100.
 ```text
 data/
   hot100.json
+  study_plan.json
 problems/
-  p0001_two_sum/
-    main.py
-    examples.txt
-    statement.md
+  01. 哈希/
+    001_p0001_two_sum/
+      main.py
+      statement.md
+  02. 双指针/
+    004_p0283_move_zeroes/
+      main.py
+      statement.md
 scripts/
   import_hot100.py
   fetch_leetcode.py
   new_problem.py
+  reorganize_hot100.py
   run.py
 notes/
   hot100.md
@@ -23,9 +29,11 @@ notes/
 
 Only `main.py` is the training target. It reads stdin and writes stdout.
 
-## Example Format
+Problem folders follow the LeetCode Hot 100 study plan order. The group folder keeps the topic order, and the three-digit prefix is the global practice order across all 100 problems.
 
-Use one `examples.txt` per problem:
+## Optional Examples
+
+`statement.md` already contains the official examples. Add `examples.txt` only when you want local ACM-style tests for a problem:
 
 ```text
 Example 1:
@@ -38,7 +46,7 @@ Output:
 4
 ```
 
-Add more cases by appending `Example 2:`, `Example 3:`, and so on.
+Add more local cases by appending `Example 2:`, `Example 3:`, and so on.
 
 ## Run Examples
 
@@ -48,7 +56,13 @@ Run one problem:
 python scripts/run.py p0001_two_sum
 ```
 
-Run every problem that has runnable examples:
+You can also run by the full grouped path:
+
+```powershell
+python scripts/run.py 001_p0001_two_sum
+```
+
+Run every problem that has local examples:
 
 ```powershell
 python scripts/run.py
@@ -66,6 +80,12 @@ Create the Hot 100 skeleton:
 
 ```powershell
 python scripts/import_hot100.py
+```
+
+Rebuild the grouped Hot 100 layout:
+
+```powershell
+python scripts/reorganize_hot100.py
 ```
 
 Fetch the official Chinese statement:

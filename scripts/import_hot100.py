@@ -3,8 +3,8 @@ import json
 import sys
 from pathlib import Path
 
+from study_plan import ROOT, planned_problem_dir
 
-ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "hot100.json"
 PROBLEMS_DIR = ROOT / "problems"
 
@@ -29,24 +29,12 @@ if __name__ == "__main__":
 '''
 
 
-EXAMPLES_TEMPLATE = """Example 1:
-Input:
-
-Output:
-"""
-
-
-def problem_dir_name(problem: dict) -> str:
-    slug = problem["slug"].replace("-", "_")
-    return f"p{problem['id']:04d}_{slug}"
-
-
 def load_hot100() -> list[dict]:
     return json.loads(DATA_PATH.read_text(encoding="utf-8"))
 
 
 def create_problem(problem: dict, dry_run: bool) -> bool:
-    problem_dir = PROBLEMS_DIR / problem_dir_name(problem)
+    problem_dir = planned_problem_dir(problem)
     if problem_dir.exists():
         print(f"[SKIP] {problem_dir.relative_to(ROOT)}")
         return False
@@ -57,7 +45,6 @@ def create_problem(problem: dict, dry_run: bool) -> bool:
 
     problem_dir.mkdir(parents=True)
     (problem_dir / "main.py").write_text(MAIN_TEMPLATE, encoding="utf-8")
-    (problem_dir / "examples.txt").write_text(EXAMPLES_TEMPLATE, encoding="utf-8")
     (problem_dir / "statement.md").write_text(
         f"# {problem['id']}. {problem['title']}\n\nSlug: `{problem['slug']}`\n",
         encoding="utf-8",

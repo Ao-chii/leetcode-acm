@@ -7,10 +7,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from study_plan import PROBLEMS_DIR, ROOT, hot100_by_slug, planned_problem_dir
 
-ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "hot100.json"
-PROBLEMS_DIR = ROOT / "problems"
 
 ENDPOINTS = {
     "cn": "https://leetcode.cn/graphql/",
@@ -39,15 +38,10 @@ query questionData($titleSlug: String!) {
 """
 
 
-def load_hot100() -> list[dict]:
-    return json.loads(DATA_PATH.read_text(encoding="utf-8"))
-
-
-def hot100_by_slug() -> dict[str, dict]:
-    return {problem["slug"]: problem for problem in load_hot100()}
-
-
 def problem_dir(problem_id: int, slug: str) -> Path:
+    known = hot100_by_slug().get(slug)
+    if known:
+        return planned_problem_dir(known)
     return PROBLEMS_DIR / f"p{problem_id:04d}_{slug.replace('-', '_')}"
 
 
@@ -139,15 +133,11 @@ def save_question(question: dict, fallback_problem: dict | None, keep_raw: bool)
         if snippet:
             (target_dir / "leetcode.py").write_text(snippet + "\n", encoding="utf-8")
 
-    examples_path = target_dir / "examples.txt"
-    if not examples_path.exists():
-        examples_path.write_text("Example 1:\nInput:\n\nOutput:\n", encoding="utf-8")
-
     return target_dir
 
 
 def slugs_from_args(args: argparse.Namespace) -> list[str]:
-    problems = load_hot100()
+    problems = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     if args.all:
         return [problem["slug"] for problem in problems]
     if args.slug:
