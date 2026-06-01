@@ -1,14 +1,14 @@
 import sys
-
-
-def solve(data: str) -> str:
-    return ""
-
+from collections import defaultdict
 
 def main() -> None:
-    data = sys.stdin.read()
-    sys.stdout.write(solve(data))
-
+    strs = input().split()
+    d = defaultdict(list)
+    for s in strs:
+        key = ''.join(sorted(s))
+        d[key].append(s)
+    
+    print(list(d.values()))
 
 if __name__ == "__main__":
     main()
