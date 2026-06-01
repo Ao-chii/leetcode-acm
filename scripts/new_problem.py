@@ -12,9 +12,6 @@ MAIN_TEMPLATE = '''import sys
 
 
 def solve(data: str) -> str:
-    tokens = data.split()
-    if not tokens:
-        return ""
     return ""
 
 

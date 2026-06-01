@@ -34,6 +34,22 @@ Only `main.py` is the training target. It reads stdin and writes stdout.
 
 Problem folders follow the LeetCode Hot 100 study plan order. The group folder keeps the topic order, and the three-digit prefix is the global practice order across all 100 problems.
 
+## Run A Problem
+
+Run the problem's `main.py` directly, then type or paste the ACM input:
+
+```powershell
+python "problems/01. 哈希/001_p0001_two_sum/main.py"
+```
+
+Finish stdin with `Ctrl+Z` then `Enter` in PowerShell.
+
+You can also pipe input when you want a quick check:
+
+```powershell
+"4 9`n2 7 11 15" | python "problems/01. 哈希/001_p0001_two_sum/main.py"
+```
+
 ## Optional Examples
 
 `statement.md` already contains the official examples. Add `examples.txt` only when you want local ACM-style tests for a problem:
@@ -51,7 +67,7 @@ Output:
 
 Add more local cases by appending `Example 2:`, `Example 3:`, and so on.
 
-## Run Examples
+## Optional Local Examples
 
 Run one problem:
 
