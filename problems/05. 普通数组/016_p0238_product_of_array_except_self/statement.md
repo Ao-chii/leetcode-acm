@@ -30,11 +30,11 @@ Slug: `product-of-array-except-self`
 
 提示：
 
-	- 2 <= nums.length <= 105
+    - 2 <= nums.length <= 105
 
-	- -30 <= nums[i] <= 30
+    - -30 <= nums[i] <= 30
 
-	- 输入 保证 数组 answer[i] 在  32 位 整数范围内
+    - 输入 保证 数组 answer[i] 在  32 位 整数范围内
 
  
 
