@@ -1,0 +1,26 @@
+Example 1:
+Input:
+ADOBECODEBANC
+ABC
+Output:
+BANC
+
+Example 2:
+Input:
+a
+a
+Output:
+a
+
+Example 3:
+Input:
+a
+aa
+Output:
+
+Example 4:
+Input:
+abc
+ac
+Output:
+abc
