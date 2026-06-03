@@ -5,6 +5,11 @@
 
 ACM mode practice workspace for LeetCode Hot 100.
 
+## Ask for Code Explanation
+
+If you ask an AI assistant to explain code, include the exact snippet (or file path + line range) and what part you find confusing.  
+Without the code itself, the assistant can only ask you to retry and provide the missing snippet.
+
 ## Layout
 
 ```text
